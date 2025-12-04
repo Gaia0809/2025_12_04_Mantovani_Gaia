@@ -12,11 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Esame Flutter',
+      title: 'Recensioni ristoranti',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.purpleAccent),
       ),
-      home: const MyHomePage(title: 'App di recensione di ristoranti'),
+      home: const MyHomePage(title: 'Recensione ristoranti'),
     );
   }
 }
@@ -30,7 +30,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _displayText = "Elenco recensioni!"; 
+  final _list = <Rewiew>[];
+
 
   @override
   Widget build(BuildContext context) {
@@ -40,41 +41,80 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Text(
-          _displayText,
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 20),
+        child: ListView(
+          children: [
+            if (_list.isEmpty)
+             Text("Non ci sono recensioni, aggiungine una!"),
+            for (final (i, todo) in _list.indexed)
+              ListTile(
+                  title: Text(todo.title),
+                  subtitle: todo.comment != null ? Text(todo.comment!) : null,
+                  trailing: Row(children: [
+                    const Icon(Icons.star, color: Colors.amber),
+                    Text("${todo.ratingfields}"),
+                    IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        setState(() {
+                          _deleteTodo(i);
+                        });
+                      },
+                    ),
+                    IconButton( 
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        setState(() {
+                          _editTodo(i);
+                        });
+                      },
+                    ),
+                  ],) 
+                  
+                ),
+          ],
         ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-        SizedBox(
-          width: 150,
-        child: FloatingActionButton.extended(
-         icon: const Icon(Icons.add),
-          onPressed: _createTodo,
-          label: const Text('Aggiungi!'),
-          ),
-          ), 
-         const SizedBox (width: 20),
-        ],
-         )
+      floatingActionButton:FloatingActionButton.extended(
+        onPressed: _createTodo,
+        icon: const Icon(Icons.add),
+        label: Text('Aggiungi una recensione!')
+      ),
     );
   }
 
   Future<void> _createTodo() async {
-    final result = await showDialog<Personal>(
+    final result = await showDialog<Rewiew>(
       context: context,
       builder: (context) {
-        return AddFormDialog();
+        return const AddFormDialog();
       },
     );
 
-    if (result == null) return; 
+    if (result == null) return;
 
     setState(() {
-      _displayText = "${result.title} - ${result.comment} - ${result.ratingfields} stelle";
+      _list.add(result);
+    });
+  }
+
+  Future<void> _editTodo(int index) async {
+    final result = await showDialog<Rewiew>(
+      context: context,
+      builder: (context) {
+        return const AddFormDialog();
+      },
+    );
+
+    if (result == null) return;
+
+    setState(() {
+      _list[index] = result;
+    });
+  }
+
+  Future<void> _deleteTodo(int index) async {
+    setState(() {
+      _list.removeAt(index);
     });
   }
 }

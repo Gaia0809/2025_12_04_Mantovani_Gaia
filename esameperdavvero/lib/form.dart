@@ -19,11 +19,11 @@ class _AddFormDialogState extends State<AddFormDialog> {
       'title': FormControl<String>(
         validators: [RequiredValidator(), MinLengthValidator(2)],
       ),
-      'comment': FormControl<String>(
-        validators: [RequiredValidator(), MinLengthValidator(2)],
+      'comment': FormControl<String>( 
+        // qua non va nessuna validazione perchè il campo può restare vuoto
       ),
       'ratingfields': FormControl<int>(
-        validators: [RequiredValidator(), MinValidator(1), MaxValidator(5)], // questo serve per aggiungere una valutazione da 1 a 5
+        validators: [RequiredValidator(), Validators.min( 1), Validators.max(5)],
       ),
     });
   }
@@ -46,7 +46,7 @@ class _AddFormDialogState extends State<AddFormDialog> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Nuovo saluto!", style: theme.textTheme.headlineSmall),
+              Text("Nuova recensione!", style: theme.textTheme.headlineSmall),
               const SizedBox(height: 40),
               ReactiveTextField(
                 formControlName: "title",
@@ -55,12 +55,13 @@ class _AddFormDialogState extends State<AddFormDialog> {
               const SizedBox(height: 20),
               ReactiveTextField(
                 formControlName: "comment",
-                decoration: const InputDecoration(hintText: "Aggiungi un commento"),
+                decoration: const InputDecoration(hintText: "Aggiungi un commento (opzionale)"),
               ),
               const SizedBox(height: 20),
               ReactiveTextField(
                 formControlName: "ratingfields",
                 decoration: const InputDecoration(hintText: "Aggiungi una valutazione da 1 a 5"),
+               valueAccessor: IntValueAccessor()
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -75,8 +76,10 @@ class _AddFormDialogState extends State<AddFormDialog> {
   }
 
   void _submit() {
+
     if (!_form.valid) return;
-    final todo = Personal(
+
+    final todo = Rewiew(
       title: _form.control("title").value,
       comment: _form.control("comment").value,
       ratingfields: _form.control("ratingfields").value,

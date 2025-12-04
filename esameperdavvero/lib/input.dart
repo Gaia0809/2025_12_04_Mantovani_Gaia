@@ -1,8 +1,8 @@
-class Personal {
-  Personal({ 
+class Rewiew {
+  Rewiew({ 
     required this.title,
-    this.comment,
-    required this.ratingfields
+    required this.ratingfields,
+    this.comment // qua non metto il required pk il commento non è obbligatorio
   });
   String title;
   String? comment;
