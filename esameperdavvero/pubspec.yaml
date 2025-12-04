@@ -8,6 +8,8 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
+  flutter:
+    sdk: flutter
   path: ^1.9.0
   flutter_riverpod: ^3.0.0
   talker_riverpod_logger: ^5.0.1
