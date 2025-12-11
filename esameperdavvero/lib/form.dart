@@ -75,7 +75,7 @@ class _AddFormDialogState extends State<AddFormDialog> {
     );
   }
 
-  void _submit() {
+  void _submit() { // context.pop(form.value); bastava solo questo invece di tutte quelle righe. 
 
     if (!_form.valid) return;
 
